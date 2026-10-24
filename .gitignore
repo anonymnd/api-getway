@@ -1,0 +1,12 @@
+/target/
+/.runtime/
+.idea/
+*.iml
+*.log
+/.env
+/.env.*
+/VERIFICATION.md
+*.pem
+*.key
+*.p12
+*.jks

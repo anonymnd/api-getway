@@ -1,0 +1,53 @@
+server:
+  address: 127.0.0.1
+  port: 18180
+  max-http-request-header-size: 16KB
+  tomcat:
+    threads:
+      max: 100
+    max-connections: 200
+    accept-count: 100
+    connection-timeout: 5s
+spring:
+  application:
+    name: learning-api-gateway
+  datasource:
+    url: jdbc:h2:file:./.runtime/users;DB_CLOSE_ON_EXIT=FALSE
+    username: sa
+    password: ${GW_DB_PASSWORD}
+  sql:
+    init:
+      mode: always
+  servlet:
+    multipart:
+      enabled: false
+  mvc:
+    formcontent:
+      filter:
+        enabled: false
+gateway:
+  jwt-secret: ${GW_JWT_SECRET}
+  demo-password: ${GW_DEMO_PASSWORD:}
+  strategy: ROUND_ROBIN
+  health-interval-ms: 2000
+  health-timeout-ms: 300
+  request-timeout-ms: 1000
+  circuit-threshold: 3
+  circuit-open-ms: 8000
+  rate-capacity: 12
+  rate-refill-per-second: 2
+  auth-capacity: 8
+  cache-ttl-ms: 5000
+  routes:
+    - id: catalog
+      prefix: /api/catalog
+      cache: true
+      backends:
+        - http://127.0.0.1:9201
+        - http://127.0.0.1:9202
+    - id: orders
+      prefix: /api/orders
+      cache: false
+      backends:
+        - http://127.0.0.1:9301
+        - http://127.0.0.1:9302
